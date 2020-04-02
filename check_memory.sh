@@ -1,16 +1,33 @@
-#!/bin/bash
+#!/bin/sh
 #
-# Script to check memory usage on Linux. Ignores memory used by disk cache.
+#    Script to check memory usage on Linux. Ignores memory used by disk cache.
 #
-# Requires the bc command
-#				 $1 $2 $3 $4
+#    Version 1.0
+#
+#    Created 2020 Florian KÃ¶ttner
+#
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+#
+#                              $1 $2 $3 $4
 # ./check_memory -w 85 -c 95
 print_help() {
     echo "Usage:"
     echo "[-w] Warning level as a percentage"
     echo "[-c] Critical level as a percentage"
-    exit 0
 }
+
 
 while test -n "$1"; do
     case "$1" in
@@ -35,47 +52,35 @@ while test -n "$1"; do
     shift
 done
 
-if [ "$warn_level" == "" ]; then
+if [ "$warn_level" = "" ]; then
     echo "No Warning Level Specified"
     print_help
     exit 3;
 fi
 
-if [ "$critical_level" == "" ]; then
+if [ "$critical_level" = "" ]; then
     echo "No Critical Level Specified"
     print_help
     exit 3;
 fi
 
-# free -m | grep "cache:" | awk '{print $1}'
-free=`free -m | grep "cache:" | awk '{print $4}'`
-used=` free -m | grep "cache:" | awk '{print $3}'`
 
-total=$(($free+$used))
+used=$(free -m | grep "Mem:" | awk '{print $3}')
+total=$(free -m | grep "Mem:" | awk '{print $2}')
+result=$((100*used/total))
 
-#result=$(echo "$used / $total * 100" |bc -l|cut -c -2)
-#echo "$used / $total * 100" |bc -l|cut -c -2
-
-useAux=$((100*$used))
-result=$(($useAux/$total))
-
-#echo "used:           $used"
-#echo "free:           $free"
-#echo "total:          $total"
-
-#echo "resAux:         $resAux"
-#echo "result:         $result"
-#echo "warn_level:     $warn_level"
-#echo "critical_level: $critical_level"
-
-## Código para debug
-if [ "$result" -lt "$warn_level" ]; then
-    echo "Memory OK. $result% used. Using $used MB  out of $total MB| 'Memory %'=$result%;$warn_level;$critical_level"
-    exit 0;
-elif [ "$result" -ge "$warn_level" ] && [ "$result" -le "$critical_level" ]; then
-    echo "Memory WARNING. $result% used. Using $used MB out of $total MB| 'Memory %'=$result;$warn_level;$critical_level%"
-    exit 1;
-elif [ "$result" -gt "$critical_level" ]; then
-    echo "Memory CRITICAL. $result% used. Using $used MB out of $total MB| 'Memory %'=$result%;$warn_level;$critical_level"
+if [ "$result" -gt "$critical_level" ]; then
+    echo "Memory CRITICAL. $result% used. Using $used MB out of $total MB.| 'Memory %'=$result%;$warn_level;$critical_level"
     exit 2;
+elif [ "$result" -ge "$warn_level" ] && [ "$result" -le "$critical_level" ]; then
+    echo "Memory WARNING. $result% used. Using $used MB out of $total MB.| 'Memory %'=$result%;$warn_level;$critical_level"
+    exit 1;
+elif [ "$result" -lt "$warn_level" ]; then
+    echo "Memory OK. $result% used. Using $used MB out of $total MB.| 'Memory %'=$result%;$warn_level;$critical_level"
+    exit 0;
+else
+    echo "Unknown: if failed"
+    exit 3;
 fi
+
+
