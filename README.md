@@ -72,7 +72,7 @@ In this part you can find configuration examples for Icinga 2.
 
 
     object CheckCommand "used_memory" {
-      command = [ PluginDir + "/check_used_memory.sh" ]
+      command = [ PluginDir + "/check_memory.sh" ]
 
 
       arguments += {
