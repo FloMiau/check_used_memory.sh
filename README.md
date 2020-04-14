@@ -47,7 +47,7 @@ The following states can occur:
 
 No problem:
 
-      ./check_memory.sh -w 50 -c 80
+      ./check_used_memory.sh -w 50 -c 80
       Memory OK. 6% used. Using 124 MB out of 1992 MB.| 'Memory %'=6%;50;80
 
 ### Something is wrong
@@ -55,12 +55,12 @@ No problem:
 
 Warning:
 
-    ./check_memory.sh -w 50 -c 80
+    ./check_used_memory.sh -w 50 -c 80
     Memory WARNING. 60% used. Using 1240 MB out of 1992 MB.| 'Memory %'=60%;50;80
     
 Critical:
 
-    ./check_memory.sh -w 50 -c 80
+    ./check_used_memory.sh -w 50 -c 80
     Memory CRITICAL. 100% used. Using 1992 MB out of 1992 MB.| 'Memory %'=100%;50;80
     
     
@@ -72,7 +72,7 @@ In this part you can find configuration examples for Icinga 2.
 
 
     object CheckCommand "used_memory" {
-      command = [ PluginDir + "/check_memory.sh" ]
+      command = [ PluginDir + "/check_used_memory.sh" ]
 
 
       arguments += {
