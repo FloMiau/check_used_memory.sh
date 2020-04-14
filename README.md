@@ -1,9 +1,9 @@
-# check_memory.sh
+# check_used_memory.sh
 This Nagios/Icinga plugin can be used to check the memory usage. It checks the amount of used RAM.
 
 ## Getting Started
 
-check_memory.sh is a shell script that checks the used memory of a system. The script was tested on bash, dash, ash and is POSIX compatible. The Tool `free`has to be installed.
+check_used_memory.sh is a shell script that checks the used memory of a system. The script was tested on bash, dash, ash and is POSIX compatible. The Tool `free`has to be installed.
 
 For installation place the python file in your plugin directory `/usr/lib/nagios/plugins/`.
 
@@ -21,7 +21,7 @@ The check is based on a script by [sebastiaopburnay](https://exchange.nagios.org
 
 ## Usage
 
-    usage: check_memory.sh [-h] -w WARNING -c CRITICAL
+    usage: check_used_memory.sh [-h] -w WARNING -c CRITICAL
 
     Script to check memory usage on Linux. Ignores memory used by disk cache Icinga plugin to check snap services
 
